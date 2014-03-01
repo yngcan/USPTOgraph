@@ -4,3 +4,5 @@ data/processed/*.csv
 data/raw/*.sql
 data/raw/*.sqlite
 data/raw/*.db
+.env
+*.pyc
