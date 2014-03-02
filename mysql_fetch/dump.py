@@ -25,7 +25,11 @@ def run():
     'patent_inventor',
     'patent_lawyer',
     'uspatentcitation',
-    'uspc'
+    'uspc',
+    'rawassignee',
+    'rawinventor',
+    'rawlawyer',
+    'rawlocation'
   ]
 
   try:
