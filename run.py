@@ -1,6 +1,7 @@
 import sys
 from mysql_fetch import dump
 from processor import nodes
+from importer.import_db import run as run_import
 
 def fetch():
   print "Fetching..."
@@ -12,10 +13,28 @@ def fetch():
 def process_nodes():
   nodes.run()
 
+def process_rels():
+  pass
+
+def process():
+  process_nodes()
+  process_rels()
+
+def neo4j_import():
+  run_import()
+
+def run_all():
+  fetch()
+  process()
+  neo4j_import()
 
 commands = {
   'fetch': fetch,
-  'process_nodes': process_nodes
+  'process_nodes': process_nodes,
+  'process_rels': process_rels,
+  'process': process,
+  'import': neo4j_import,
+  'all': run_all
 }
 
 try:

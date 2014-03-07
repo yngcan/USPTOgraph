@@ -27,3 +27,14 @@ data = Module('data', {
 fetch = Module('mysql_fetch', {
   'convert_script_path': 'convert.sh'
 })
+
+db_import = Module('importer', {
+  'script': 'import.sh'  
+})
+
+neo4j = Module('neo4j', {
+  'start': 'bin/neo4j start', # use this with os.system - eg os.system(neo4j['start'])
+  'stop': 'bin/neo4j stop',
+  'console': 'bin/neo4j console',
+  'data': 'data/graph.db'
+})

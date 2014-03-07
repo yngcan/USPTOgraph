@@ -6,8 +6,8 @@ sys.path.append('..')
 import config
 
 # Example usage: node_file('inventors')
-node_file = lambda x: config.data['processed_path'] + '/n_' + x + '.csv'
-rel_file = lambda x: config.data['processed_path'] + '/r_' + x + '.csv'
+node_file = lambda x: config.data['processed_path'] + '/n_' + x + '.tsv'
+rel_file = lambda x: config.data['processed_path'] + '/r_' + x + '.tsv'
 
 config = config
 
@@ -29,5 +29,9 @@ def from_sql(tablename, output = True):
 
 def output_tsv(df, filename):
   type = filename.split("/")[-1][2:-4].upper() # /Users/test/n_yee.csv --> YEE
-  df.to_csv(filename, index=False, sep="\t")
+  df.to_csv(filename, index=False, sep="\t", encoding='utf-8')
   print type, len(df), "--->", filename
+
+lambdas = {
+  'concat_class': lambda x: str(x['mainclass_id']) + '/' + str(x['subclass_id'].split('/')[-1])
+}
