@@ -39,18 +39,15 @@ def run():
       '-u ' + os.environ['USER'],
       '-p',
       '-p' + os.environ['PASS'],
-      '--single-transaction',
-      '--compatible=ansi',
-      '--skip-extended-insert',
-      '--compact'
+      '--single-transaction'
     ]
 
-    output_file = config.data['raw_path'] + '/dump.sql'
+    output_file = config.data['raw_sqlite']
     db = os.environ['DB']
     tables_str = " ".join(tables)
     opts_str = " ".join(options)
 
-    command = " ".join(['mysqldump', db, tables_str, opts_str, '>', output_file])
+    command = " ".join([config.fetch['convert_script_path'], opts_str, db, tables_str, '|', 'sqlite3', output_file])
 
     print "Calling", command
     os.system(command)

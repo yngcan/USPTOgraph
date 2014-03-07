@@ -20,7 +20,6 @@ class Module:
 
 data = Module('data', {
   'raw_path': 'raw',
-  'raw_mysqldump': 'raw/dump.sql',
   'raw_sqlite': 'raw/raw.sqlite',
   'processed_path': 'processed'
 })
