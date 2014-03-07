@@ -1,5 +1,6 @@
 import sys
 from mysql_fetch import dump
+from processor import nodes
 
 def fetch():
   print "Fetching..."
@@ -8,11 +9,13 @@ def fetch():
   else:
     print "Fetch failed"
 
-
+def process_nodes():
+  nodes.run()
 
 
 commands = {
-  'fetch': fetch
+  'fetch': fetch,
+  'process_nodes': process_nodes
 }
 
 try:
