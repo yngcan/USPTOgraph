@@ -55,6 +55,7 @@ def run():
   nodes_to_output = [patents, main_classes, subclasses, lawyers, locations, inventors, assignees]
   for fn in nodes_to_output:
     fn()
+  print "\n"
 
 if __name__ == '__main__':
   print "Running manually...\n"

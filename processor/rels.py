@@ -81,6 +81,7 @@ def run():
   ]
   for fn in rels_to_output:
     fn()
+  print "\n"
 
 if __name__ == '__main__':
   print "Running manually...\n"
