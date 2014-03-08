@@ -22,10 +22,15 @@ def select(tablename):
 ### DB SETUP ###
 conn = sqlite3.connect(config.data['raw_sqlite'])
 
-def from_sql(tablename, output = True):
+def from_sql(tablename, output = True, columns = False):
   if output:
     print "Loading table '" + str(tablename) + "'..."
-  return psql.read_frame(select(tablename), conn)
+
+  if not columns:
+    return psql.read_frame(select(tablename), conn)
+  else:
+    fields = ", ".join(columns)
+    return psql.read_frame('SELECT ' + fields + ' FROM ' + str(tablename), conn)
 
 def output_tsv(df, filename, order = False):
   type = filename.split("/")[-1][2:-4].upper() # /Users/test/n_yee.csv --> YEE

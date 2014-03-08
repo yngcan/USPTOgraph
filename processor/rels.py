@@ -68,8 +68,8 @@ def inventor_from():
   output_tsv(inventor_locs, rel_file('inventor_from'), ORDER)
 
 def cites():
-  uspatentcitation = from_sql('uspatentcitation')
-  citations = uspatentcitation[['patent_id', 'citation_id']].dropna() # Make sure to order them properly...
+  # Manual query because pulling all fields was too slow...
+  citations = from_sql('uspatentcitation', True, ['patent_id', 'citation_id']).dropna() # Make sure to order them properly...
   citations.columns = [sid('patents'), sid('patents')]
   citations['type'] = 'CITES'
 
