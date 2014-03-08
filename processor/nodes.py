@@ -14,7 +14,7 @@ def main_classes():
   output_tsv(classes, node_file('classes'))
 
 def subclasses():
-  subclasses = from_sql('uspc')[['mainclass_id', 'subclass_id']].drop_duplicates()
+  subclasses = from_sql('uspc')[['mainclass_id', 'subclass_id']].drop_duplicates().dropna()
   subclasses['id:string:subclasses'] = subclasses.apply(lambdas['concat_class'], axis=1)
   subclasses = subclasses.drop(['mainclass_id', 'subclass_id'], axis=1)
   subclasses['l:label'] = 'Subclass'
@@ -29,7 +29,7 @@ def lawyers():
   output_tsv(lawyers, node_file('lawyers'))
 
 def locations():
-  locs = from_sql('location')
+  locs = from_sql('location').dropna(subset=['country'])
   locs.rename(columns={'id':'id:string:location'})
   locs['l:label'] = 'Location'
   locs['country'] = locs['country'].apply(lambda x: x.upper())
