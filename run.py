@@ -40,7 +40,14 @@ def run_all():
   fetch()
   process()
   neo4j_import()
-  neo4j('start')
+
+def run_after_fetch_and_start():
+  process()
+  neo4j_import()
+  neo4j('console')
+
+def clean_processed_data():
+  os.system('rm ' + config.data['processed_path'] + '/*')
 
 commands = {
   'fetch': fetch,
@@ -49,7 +56,9 @@ commands = {
   'process': process,
   'import': neo4j_import,
   'all': run_all,
-  'neo4j': neo4j
+  'neo4j': neo4j,
+  'run_after_fetch_and_start': run_after_fetch_and_start,
+  'clean_processed': clean_processed_data
 }
 
 try:

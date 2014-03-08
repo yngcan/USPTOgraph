@@ -52,10 +52,20 @@ def represented():
   output_tsv(patent_lawyer, rel_file('represented'), ORDER)
 
 def assignee_from():
-  pass
+  ORDER = [sid('assignees'), sid('locations'), 'type']
+
+  assignee_locs = from_sql('location_assignee').dropna()
+  assignee_locs.rename(columns={'location_id':sid('locations'), 'assignee_id':sid('assignees')}, inplace=True)
+  assignee_locs['type'] = 'FROM'
+  output_tsv(assignee_locs, rel_file('assignee_from'), ORDER)
 
 def inventor_from():
-  pass
+  ORDER = [sid('inventors'), sid('locations'), 'type']
+
+  inventor_locs = from_sql('location_inventor').dropna()
+  inventor_locs.rename(columns={'location_id':sid('locations'), 'inventor_id':sid('inventors')}, inplace=True)
+  inventor_locs['type'] = 'FROM'
+  output_tsv(inventor_locs, rel_file('inventor_from'), ORDER)
 
 ### Process ###
 def run():
