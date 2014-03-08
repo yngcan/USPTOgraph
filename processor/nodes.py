@@ -30,7 +30,7 @@ def lawyers():
 
 def locations():
   locs = from_sql('location').dropna(subset=['country'])
-  locs.rename(columns={'id':'id:string:location'}, inplace=True)
+  locs.rename(columns={'id':'id:string:locations'}, inplace=True)
   locs['l:label'] = 'Location'
   locs['country'] = locs['country'].apply(lambda x: x.upper())
   output_tsv(locs, node_file('locations'))
