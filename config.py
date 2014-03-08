@@ -33,8 +33,6 @@ db_import = Module('importer', {
 })
 
 neo4j = Module('neo4j', {
-  'start': 'bin/neo4j start', # use this with os.system - eg os.system(neo4j['start'])
-  'stop': 'bin/neo4j stop',
-  'console': 'bin/neo4j console',
+  'bin_path': 'bin/neo4j', # use this with os.system - eg os.system(neo4j['bin_path'] + " start")
   'data': 'data/graph.db'
 })

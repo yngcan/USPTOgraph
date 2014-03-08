@@ -1,7 +1,9 @@
 import sys
+import os
 from mysql_fetch import dump
-from processor import nodes
+from processor import nodes, rels
 from importer.import_db import run as run_import
+import config
 
 def fetch():
   print "Fetching..."
@@ -14,7 +16,7 @@ def process_nodes():
   nodes.run()
 
 def process_rels():
-  pass
+  rels.run()
 
 def process():
   process_nodes()
@@ -23,10 +25,22 @@ def process():
 def neo4j_import():
   run_import()
 
+def neo4j(arg = False):
+  try:
+    cmd = sys.argv[2]
+    os.system(config.neo4j['bin_path'] + " " + cmd)
+  except:
+    if not arg:
+      print "Please pass an additional command to run - e.g. python run.py neo4j console"
+      sys.exit(1)
+    else:
+      os.system(config.neo4j['bin_path'] + " " + arg)
+
 def run_all():
   fetch()
   process()
   neo4j_import()
+  neo4j('start')
 
 commands = {
   'fetch': fetch,
@@ -34,7 +48,8 @@ commands = {
   'process_rels': process_rels,
   'process': process,
   'import': neo4j_import,
-  'all': run_all
+  'all': run_all,
+  'neo4j': neo4j
 }
 
 try:

@@ -2,7 +2,7 @@ from helpers import node_file, from_sql, output_tsv, lambdas
 
 def patents():
   patents = from_sql('patent')[['id', 'date']]
-  patents['id:string:patents'] = patents.pop('id')
+  patents.rename(columns={'id':'id:string:patents'}, inplace=True)
   patents['l:label'] = 'Patent'
   output_tsv(patents, node_file('patents'))
 
@@ -10,7 +10,7 @@ def main_classes():
   classes = from_sql('mainclass').dropna(subset=['title'])
   classes = classes.drop('text', 1)
   classes['l:label'] = 'Class'
-  classes['id:string:classes'] = classes.pop('id')
+  classes.rename(columns={'id':'id:string:classes'}, inplace=True)
   output_tsv(classes, node_file('classes'))
 
 def subclasses():
@@ -25,12 +25,12 @@ def lawyers():
   lawyers = from_sql('lawyer')
   lawyers = lawyers.drop('country', 1)
   lawyers['l:label'] = 'Lawyer'
-  lawyers['id:string:lawyers'] = lawyers.pop('id')
+  lawyers.rename(columns={'id':'id:string:lawyers'}, inplace=True)
   output_tsv(lawyers, node_file('lawyers'))
 
 def locations():
   locs = from_sql('location')
-  locs['id:string:locations'] = locs.pop('id')
+  locs.rename(columns={'id':'id:string:location'})
   locs['l:label'] = 'Location'
   locs['country'] = locs['country'].apply(lambda x: x.upper())
   output_tsv(locs, node_file('locations'))
@@ -38,12 +38,14 @@ def locations():
 def inventors():
   inventors = from_sql('rawinventor').drop_duplicates(cols=['inventor_id'])
   inventors = inventors.drop(['patent_id', 'rawlocation_id', 'nationality', 'sequence'], 1)
+  inventors.rename(columns={'inventor_id':'id:string:inventors'}, inplace=True)
   inventors['l:label'] = 'Inventor'
   output_tsv(inventors, node_file('inventors'))
 
 def assignees():
   assignees = from_sql('assignee')
   assignees = assignees.drop(['type', 'residence', 'nationality'], 1)
+  assignees.rename(columns={'id':'id:string:assignees'}, inplace=True)
   assignees['l:label'] = 'Assignee'
   output_tsv(assignees, node_file('assignees'))
 

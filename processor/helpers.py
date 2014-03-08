@@ -27,11 +27,15 @@ def from_sql(tablename, output = True):
     print "Loading table '" + str(tablename) + "'..."
   return psql.read_frame(select(tablename), conn)
 
-def output_tsv(df, filename):
+def output_tsv(df, filename, order = False):
   type = filename.split("/")[-1][2:-4].upper() # /Users/test/n_yee.csv --> YEE
-  df.to_csv(filename, index=False, sep="\t", encoding='utf-8')
+  if not order:
+    df.to_csv(filename, index=False, sep="\t", encoding='utf-8')
+  else:
+    df.to_csv(filename, index=False, sep="\t", encoding='utf-8', cols=order)
   print type, len(df), "--->", filename
 
 lambdas = {
-  'concat_class': lambda x: str(x['mainclass_id']) + '/' + str(x['subclass_id'].split('/')[-1])
+  'concat_class': lambda x: str(x['mainclass_id']) + '/' + str(x['subclass_id'].split('/')[-1]),
+  'sid': lambda x: "id:string:" + str(x) # string id
 }
