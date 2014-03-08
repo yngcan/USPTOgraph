@@ -49,6 +49,12 @@ def run_after_fetch_and_start():
 def clean_processed_data():
   os.system('rm ' + config.data['processed_path'] + '/*')
 
+def install_neo4j():
+  os.system('curl -O http://dist.neo4j.org/neo4j-community-2.0.1-unix.tar.gz')
+  os.system('tar -zxvf neo4j-community-2.0.1-unix.tar.gz')
+  os.system('mv neo4j-community-2.0.1 ' + config.neo4j.path)
+  os.system('rm neo4j-community-2.0.1-unix.tar.gz')
+
 commands = {
   'fetch': fetch,
   'process_nodes': process_nodes,
@@ -58,7 +64,8 @@ commands = {
   'all': run_all,
   'neo4j': neo4j,
   'run_after_fetch_and_start': run_after_fetch_and_start,
-  'clean_processed': clean_processed_data
+  'clean_processed': clean_processed_data,
+  'install_neo4j': install_neo4j
 }
 
 try:
