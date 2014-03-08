@@ -67,6 +67,15 @@ def inventor_from():
   inventor_locs['type'] = 'FROM'
   output_tsv(inventor_locs, rel_file('inventor_from'), ORDER)
 
+def cites():
+  uspatentcitation = from_sql('uspatentcitation')
+  citations = uspatentcitation[['patent_id', 'citation_id']].dropna() # Make sure to order them properly...
+  citations.columns = [sid('patents'), sid('patents')]
+  citations['type'] = 'CITES'
+
+  # No order needed because we've whittled it down to only the fields we want
+  output_tsv(citations, rel_file('cites'))
+
 ### Process ###
 def run():
   print "Processing relationships (edges)\n"
@@ -77,7 +86,8 @@ def run():
     invented,
     represented,
     assignee_from,
-    inventor_from
+    inventor_from,
+    cites
   ]
   for fn in rels_to_output:
     fn()
