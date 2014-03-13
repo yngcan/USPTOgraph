@@ -32,11 +32,12 @@ def from_sql(tablename, output = True, columns = None):
 
 def output_tsv(df, filename, order = False):
   type = filename.split("/")[-1][2:-4].upper() # /Users/test/n_yee.csv --> YEE
+  print "- Writing", type, "to tab sep value..."
   if not order:
     df.to_csv(filename, index=False, sep="\t", encoding='utf-8')
   else:
     df.to_csv(filename, index=False, sep="\t", encoding='utf-8', cols=order)
-  print type, len(df), "--->", filename
+  print "- Wrote", type, len(df), "--->", filename
 
 lambdas = {
   'concat_class': lambda x: str(x['mainclass_id']) + '/' + str(x['subclass_id'].split('/')[-1]),
