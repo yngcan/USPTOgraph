@@ -4,6 +4,8 @@ def patents():
   patents = from_sql('patent')[['id', 'date']]
   patents.rename(columns={'id':'id:string:patents'}, inplace=True)
   patents['l:label'] = 'Patent'
+  patents['year:int'] = patents['date'].apply(lambda x: x.split("-")[0])
+  patents['month:int'] = patents['date'].apply(lambda x: x.split("-")[1])
   output_tsv(patents, node_file('patents'))
 
 def main_classes():
