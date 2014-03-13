@@ -12,8 +12,11 @@ rel_file = lambda x: config.data['processed_path'] + '/r_' + x + '.tsv'
 config = config
 
 # Example usage: select('inventor') or select('rawinventor')
-def select(tablename):
-  query = "SELECT * FROM "
+def select(tablename, fields = None):
+  if fields is None:
+    query = "SELECT * FROM "
+  else:
+    query = 'SELECT ' + ", ".join(fields) + ' FROM '
   query += str(tablename)
   if 'TEST' in os.environ.keys():
     query += ' LIMIT 500000'
@@ -22,15 +25,10 @@ def select(tablename):
 ### DB SETUP ###
 conn = sqlite3.connect(config.data['raw_sqlite'])
 
-def from_sql(tablename, output = True, columns = False):
+def from_sql(tablename, output = True, columns = None):
   if output:
     print "Loading table '" + str(tablename) + "'..."
-
-  if not columns:
-    return psql.read_frame(select(tablename), conn)
-  else:
-    fields = ", ".join(columns)
-    return psql.read_frame('SELECT ' + fields + ' FROM ' + str(tablename), conn)
+  return psql.read_frame(select(tablename, columns), conn)
 
 def output_tsv(df, filename, order = False):
   type = filename.split("/")[-1][2:-4].upper() # /Users/test/n_yee.csv --> YEE
