@@ -44,6 +44,17 @@ def invented():
   patent_inventor['type'] = 'INVENTED'
   output_tsv(patent_inventor, rel_file('invented'), ORDER)
 
+# Patent -[:INVENTED_IN]-> Location
+def invented_in():
+  ORDER = [sid('patents'), sid('locations'), 'type', 'by']
+
+  rawinventor = from_sql('rawinventor', True, ['rawlocation_id', 'patent_id', 'inventor_id'])
+  rawlocation = from_sql('rawlocation', True, ['id', 'location_id'])
+  patent_location = rawinventor.merge(rawlocation, left_on=['rawlocation_id'], right_on=['id']).dropna(subset=['patent_id', 'inventor_id', 'location_id'])
+  patent_location.rename(columns={'patent_id':sid('patents'), 'inventor_id': 'by', 'location_id': sid('locations')}, inplace=True)
+  patent_location['type'] = 'INVENTED_IN'
+  output_tsv(patent_location, rel_file('invented_in'), ORDER)
+
 # Lawyer -[:REPRESENTED]-> Patent
 def represented():
   ORDER = [sid('lawyers'), sid('patents'), 'type']
@@ -89,6 +100,7 @@ def run():
     subclasses,
     classified_as,
     invented,
+    invented_in,
     represented,
     assignee_from,
     inventor_from,
