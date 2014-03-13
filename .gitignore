@@ -8,3 +8,4 @@ data/raw/*.db
 .env
 *.pyc
 USPTO_graph.tar.gz
+queries
