@@ -16,7 +16,7 @@ class Module:
 
 
 ### PREFERENCES ###
-TEST_SELECT_LIMIT = '500000'
+TEST_SELECT_LIMIT = '2000000'
 
 data = Module('data', {
   'raw_path': 'raw',

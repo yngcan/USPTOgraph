@@ -4,81 +4,81 @@ sid = lambdas['sid']
 
 # Patent -[:ASSIGNED_TO]-> Assignee
 def assigned_to():
-  ORDER = [sid('patents'), sid('assignees'), 'type']
+  ORDER = [sid('Patent'), sid('Assignee'), 'type']
 
   patent_assignee = from_sql('patent_assignee')
-  patent_assignee.rename(columns={'patent_id':'id:string:patents', 'assignee_id':'id:string:assignees'}, inplace=True)
+  patent_assignee.rename(columns={'patent_id':'id:string:Patent', 'assignee_id':'id:string:Assignee'}, inplace=True)
   patent_assignee['type'] = 'ASSIGNED_TO'
   output_tsv(patent_assignee, rel_file('assigned_to'), ORDER)
 
 # Subclass -[:SUBCLASSES]-> Class
 def subclasses():
-  ORDER = [sid('subclasses'), sid('classes'), 'type']
+  ORDER = [sid('Subclass'), sid('Class'), 'type']
 
   subclasses = from_sql('uspc')[['mainclass_id', 'subclass_id']].drop_duplicates().dropna()
-  subclasses['id:string:subclasses'] = subclasses.apply(lambdas['concat_class'], axis=1)
+  subclasses['id:string:Subclass'] = subclasses.apply(lambdas['concat_class'], axis=1)
   subclasses = subclasses.drop('subclass_id', axis=1)
-  subclasses.rename(columns={'mainclass_id':'id:string:classes'}, inplace=True)
+  subclasses.rename(columns={'mainclass_id':'id:string:Class'}, inplace=True)
   subclasses['type'] = 'SUBCLASSES'
   output_tsv(subclasses, rel_file('subclasses'), ORDER)
 
 # Patent -[:CLASSIFIED_AS]-> Subclass
 def classified_as():
-  ORDER = [sid('patents'), sid('subclasses'), 'type']
+  ORDER = [sid('Patent'), sid('Subclass'), 'type']
 
   uspc = from_sql('uspc')[['mainclass_id', 'subclass_id', 'patent_id']].drop_duplicates().dropna()
-  uspc['id:string:subclasses'] = uspc.apply(lambdas['concat_class'], axis=1)
-  uspc.rename(columns={'patent_id':sid('patents')}, inplace=True)
+  uspc['id:string:Subclass'] = uspc.apply(lambdas['concat_class'], axis=1)
+  uspc.rename(columns={'patent_id':sid('Patent')}, inplace=True)
   uspc = uspc.drop('subclass_id', 1)
   uspc['type'] = 'CLASSIFIED_AS'
   output_tsv(uspc, rel_file('classified_as'), ORDER)
 
 # Inventor -[:INVENTED]-> Patent
 def invented():
-  ORDER = [sid('inventors'), sid('patents'), 'type', 'from']
+  ORDER = [sid('Inventor'), sid('Patent'), 'type', 'from']
 
   rawinventor = from_sql('rawinventor', True, ['rawlocation_id', 'patent_id', 'inventor_id'])
   rawlocation = from_sql('rawlocation', True, ['id', 'location_id'])
   patent_inventor = rawinventor.merge(rawlocation, left_on=['rawlocation_id'], right_on=['id']).dropna(subset=['patent_id', 'inventor_id', 'location_id'])
-  patent_inventor.rename(columns={'patent_id':sid('patents'), 'inventor_id':sid('inventors'), 'location_id': 'from'}, inplace=True)
+  patent_inventor.rename(columns={'patent_id':sid('Patent'), 'inventor_id':sid('Inventor'), 'location_id': 'from'}, inplace=True)
   patent_inventor['type'] = 'INVENTED'
   output_tsv(patent_inventor, rel_file('invented'), ORDER)
 
 # Patent -[:INVENTED_IN]-> Location
 def invented_in():
-  ORDER = [sid('patents'), sid('locations'), 'type', 'by']
+  ORDER = [sid('Patent'), sid('Location'), 'type', 'by']
 
   rawinventor = from_sql('rawinventor', True, ['rawlocation_id', 'patent_id', 'inventor_id'])
   rawlocation = from_sql('rawlocation', True, ['id', 'location_id'])
   patent_location = rawinventor.merge(rawlocation, left_on=['rawlocation_id'], right_on=['id']).dropna(subset=['patent_id', 'inventor_id', 'location_id'])
-  patent_location.rename(columns={'patent_id':sid('patents'), 'inventor_id': 'by', 'location_id': sid('locations')}, inplace=True)
+  patent_location.rename(columns={'patent_id':sid('Patent'), 'inventor_id': 'by', 'location_id': sid('Location')}, inplace=True)
   patent_location['type'] = 'INVENTED_IN'
   output_tsv(patent_location, rel_file('invented_in'), ORDER)
 
 # Lawyer -[:REPRESENTED]-> Patent
 def represented():
-  ORDER = [sid('lawyers'), sid('patents'), 'type']
+  ORDER = [sid('Lawyer'), sid('Patent'), 'type']
 
   patent_lawyer = from_sql('patent_lawyer')
-  patent_lawyer.rename(columns={'patent_id':sid('patents'), 'lawyer_id':sid('lawyers')}, inplace=True)
+  patent_lawyer.rename(columns={'patent_id':sid('Patent'), 'lawyer_id':sid('Lawyer')}, inplace=True)
   patent_lawyer['type'] = 'REPRESENTED'
   output_tsv(patent_lawyer, rel_file('represented'), ORDER)
 
 # Assignee -[:FROM]-> Location
 def assignee_from():
-  ORDER = [sid('assignees'), sid('locations'), 'type']
+  ORDER = [sid('Assignee'), sid('Location'), 'type']
 
   assignee_locs = from_sql('location_assignee').dropna()
-  assignee_locs.rename(columns={'location_id':sid('locations'), 'assignee_id':sid('assignees')}, inplace=True)
+  assignee_locs.rename(columns={'location_id':sid('Location'), 'assignee_id':sid('Assignee')}, inplace=True)
   assignee_locs['type'] = 'FROM'
   output_tsv(assignee_locs, rel_file('assignee_from'), ORDER)
 
 # Inventor -[:FROM]-> Location
 def inventor_from():
-  ORDER = [sid('inventors'), sid('locations'), 'type']
+  ORDER = [sid('Inventor'), sid('Location'), 'type']
 
   inventor_locs = from_sql('location_inventor').dropna()
-  inventor_locs.rename(columns={'location_id':sid('locations'), 'inventor_id':sid('inventors')}, inplace=True)
+  inventor_locs.rename(columns={'location_id':sid('Location'), 'inventor_id':sid('Inventor')}, inplace=True)
   inventor_locs['type'] = 'FROM'
   output_tsv(inventor_locs, rel_file('inventor_from'), ORDER)
 
@@ -86,7 +86,7 @@ def inventor_from():
 def cites():
   # Manual query because pulling all fields was too slow...
   citations = from_sql('uspatentcitation', True, ['patent_id', 'citation_id']).dropna() # Make sure to order them properly...
-  citations.columns = [sid('patents'), sid('patents')]
+  citations.columns = [sid('Patent'), sid('Patent')]
   citations['type'] = 'CITES'
 
   # No order needed because we've whittled it down to only the fields we want
