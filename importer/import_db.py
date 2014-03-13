@@ -22,7 +22,7 @@ def run():
 
   CMD = " ".join(commands)
 
-  print "Calling", CMD
+  # print "Calling", CMD
   system(CMD)
 
 if __name__ == '__main__':

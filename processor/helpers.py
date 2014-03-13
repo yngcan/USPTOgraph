@@ -19,7 +19,7 @@ def select(tablename, fields = None):
     query = 'SELECT ' + ", ".join(fields) + ' FROM '
   query += str(tablename)
   if 'TEST' in os.environ.keys():
-    query += ' LIMIT 500000'
+    query += ' LIMIT ' + str(config.TEST_SELECT_LIMIT)
   return query
 
 ### DB SETUP ###
