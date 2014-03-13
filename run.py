@@ -40,6 +40,7 @@ def run_all():
   fetch()
   process()
   neo4j_import()
+  compress()
 
 def run_after_fetch_and_start():
   process()
@@ -54,6 +55,9 @@ def install_neo4j():
   os.system('tar -zxvf neo4j-community-2.0.1-unix.tar.gz')
   os.system('mv neo4j-community-2.0.1 ' + config.neo4j.path)
   os.system('rm neo4j-community-2.0.1-unix.tar.gz')
+
+def compress():
+  os.system('tar -cvf USPTO_graph.tar neo4j && gzip USPTO_graph.tar')
 
 commands = {
   'fetch': fetch,
