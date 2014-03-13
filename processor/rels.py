@@ -35,10 +35,12 @@ def classified_as():
 
 # Inventor -[:INVENTED]-> Patent
 def invented():
-  ORDER = [sid('inventors'), sid('patents'), 'type']
+  ORDER = [sid('inventors'), sid('patents'), 'type', 'from']
 
-  patent_inventor = from_sql('patent_inventor')
-  patent_inventor.rename(columns={'patent_id':sid('patents'), 'inventor_id':sid('inventors')}, inplace=True)
+  rawinventor = from_sql('rawinventor', True, ['rawlocation_id', 'patent_id', 'inventor_id'])
+  rawlocation = from_sql('rawlocation', True, ['id', 'location_id'])
+  patent_inventor = rawinventor.merge(rawlocation, left_on=['rawlocation_id'], right_on=['id']).dropna(subset=['patent_id', 'inventor_id', 'location_id'])
+  patent_inventor.rename(columns={'patent_id':sid('patents'), 'inventor_id':sid('inventors'), 'location_id': 'from'}, inplace=True)
   patent_inventor['type'] = 'INVENTED'
   output_tsv(patent_inventor, rel_file('invented'), ORDER)
 
