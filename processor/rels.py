@@ -53,6 +53,7 @@ def represented():
   patent_lawyer['type'] = 'REPRESENTED'
   output_tsv(patent_lawyer, rel_file('represented'), ORDER)
 
+# Assignee -[:FROM]-> Location
 def assignee_from():
   ORDER = [sid('assignees'), sid('locations'), 'type']
 
@@ -61,6 +62,7 @@ def assignee_from():
   assignee_locs['type'] = 'FROM'
   output_tsv(assignee_locs, rel_file('assignee_from'), ORDER)
 
+# Inventor -[:FROM]-> Location
 def inventor_from():
   ORDER = [sid('inventors'), sid('locations'), 'type']
 
@@ -69,6 +71,7 @@ def inventor_from():
   inventor_locs['type'] = 'FROM'
   output_tsv(inventor_locs, rel_file('inventor_from'), ORDER)
 
+# Patent -[:CITES]-> Patent
 def cites():
   # Manual query because pulling all fields was too slow...
   citations = from_sql('uspatentcitation', True, ['patent_id', 'citation_id']).dropna() # Make sure to order them properly...
