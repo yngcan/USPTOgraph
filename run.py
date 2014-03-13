@@ -69,7 +69,8 @@ commands = {
   'neo4j': neo4j,
   'run_after_fetch_and_start': run_after_fetch_and_start,
   'clean_processed': clean_processed_data,
-  'install_neo4j': install_neo4j
+  'install_neo4j': install_neo4j,
+  'compress': compress
 }
 
 try:
