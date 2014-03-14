@@ -6,6 +6,7 @@ def patents():
   patents['l:label'] = 'Patent'
   patents['year:int'] = patents['date'].apply(lambda x: x.split("-")[0])
   patents['month:int'] = patents['date'].apply(lambda x: x.split("-")[1])
+  patents['day:int'] = patents['date'].apply(lambda x: x.split("-")[2])
   output_tsv(patents, node_file('patents'))
 
 def main_classes():
