@@ -19,7 +19,7 @@ def main_classes():
 def subclasses():
   subclasses = from_sql('uspc')[['mainclass_id', 'subclass_id']].drop_duplicates().dropna()
   subclasses['id:string:Subclass'] = subclasses.apply(lambdas['concat_class'], axis=1)
-  subclasses = subclasses.drop(['mainclass_id', 'subclass_id'], axis=1)
+  subclasses = subclasses.drop('subclass_id', 1)
   subclasses['l:label'] = 'Subclass'
   subclasses = subclasses.drop_duplicates(cols=['id:string:Subclass'])
   output_tsv(subclasses, node_file('subclasses'))
